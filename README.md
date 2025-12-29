@@ -50,21 +50,10 @@ python demo_v1_legacy.py
 🏗 System Architecture (系统架构图)
 v2.0 Cross-Attention Flow
 code
-Mermaid
-graph TD
-    subgraph Omics Stream
-    A[Clinical/Blood/Urine] --> B(Projectors)
-    B --> C[Omics Queries]
-    end
-    
-    subgraph Spatial Stream
-    D[3D CT Image] --> E[Swin UNETR Backbone]
-    E --> F[Visual Keys/Values]
-    end
-    
-    C & F --> G{Cross-Attention Engine}
-    G --> H[Visual-Enhanced Omics Features]
-    H --> I[Risk Prediction Heads]
+### v2.0 Cross-Attention Flow
+![Avatar Architecture](./assets/architecture_v2.png)
+
+> **Figure 1:** The proposed "Avatar" Dual-Stream Architecture. The **Omics Stream** (Top) queries the **Spatial Stream** (Bottom) via Cross-Attention to extract semantic-aware visual features.
 📂 Repository Structure
 code
 Text
