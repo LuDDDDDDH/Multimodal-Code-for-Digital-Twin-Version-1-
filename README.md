@@ -39,18 +39,20 @@ The framework operates in two distinct phases to optimize resource utilization:
 
 ```mermaid
 graph LR
-    subgraph Phase 1: Heavy Mode (Feature Extraction)
-    A[3D CT Volume] --> B[Swin UNETR Backbone]
-    B --> C[Global Feature Pooling]
-    C --> D((Save .npy Features))
+    subgraph P1 ["Phase 1: Heavy Mode (Feature Extraction)"]
+        direction LR
+        A["3D CT Volume"] --> B["Swin UNETR Backbone"]
+        B --> C["Global Feature Pooling"]
+        C --> D(("Save .npy Features"))
     end
 
-    subgraph Phase 2: Light Mode (Fusion & Training)
-    D --> E[Feature Projector]
-    F[Clinical/Omics Data] --> G[Modality Embeddings]
-    E & G --> H[Transformer Encoder]
-    H --> I[Task-Specific Decoders]
-    I --> J[Outputs: Efficacy / Toxicity / Survival]
+    subgraph P2 ["Phase 2: Light Mode (Fusion & Training)"]
+        direction LR
+        D --> E["Feature Projector"]
+        F["Clinical/Omics Data"] --> G["Modality Embeddings"]
+        E & G --> H["Transformer Encoder"]
+        H --> I["Task-Specific Decoders"]
+        I --> J["Outputs: Efficacy / Toxicity / Survival"]
     end
 📂 Directory Structure (目录结构)
 code
