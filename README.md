@@ -53,7 +53,8 @@ graph LR
         E & G --> H["Transformer Encoder"]
         H --> I["Task-Specific Decoders"]
         I --> J["Outputs: Efficacy / Toxicity / Survival"]
-    end```
+    end
+```
 📂 Directory Structure (目录结构)
 code
 Text
