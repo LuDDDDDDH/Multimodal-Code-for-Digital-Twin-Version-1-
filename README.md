@@ -40,24 +40,27 @@ The framework operates in two distinct phases to optimize resource utilization:
 ```mermaid
 graph LR
     subgraph P1 ["Phase 1: Heavy Mode (Feature Extraction)"]
-        direction LR
-        A["3D CT Volume"] --> B["Swin UNETR Backbone"]
-        B --> C["Global Feature Pooling"]
-        C --> D(("Save .npy Features"))
+    direction LR
+    A[3D CT Volume] --> B[Swin UNETR Backbone]
+    B --> C[Global Feature Pooling]
+    C --> D((Save .npy Features))
     end
 
     subgraph P2 ["Phase 2: Light Mode (Fusion & Training)"]
-        direction LR
-        D --> E["Feature Projector"]
-        F["Clinical/Omics Data"] --> G["Modality Embeddings"]
-        E & G --> H["Transformer Encoder"]
-        H --> I["Task-Specific Decoders"]
-        I --> J["Outputs: Efficacy / Toxicity / Survival"]
+    direction LR
+    D --> E[Feature Projector]
+    F[Clinical/Omics Data] --> G[Modality Embeddings]
+    E & G --> H[Transformer Encoder]
+    H --> I[Task-Specific Decoders]
+    I --> J[Outputs: Efficacy / Toxicity / Survival]
     end
-```    
-📂 Directory Structure (目录结构)
-code
-Text
+```
+
+---
+
+## 📂 Directory Structure (目录结构)
+
+```text
 .
 ├── config.py                 # Centralized configuration (Paths, Hyperparams)
 ├── dataset.py                # Multi-modal Dataset loader & transforms
@@ -68,53 +71,37 @@ Text
 ├── extract_ct_features.py    # Utility script for offline feature extraction
 ├── run_full_experiment.sh    # Bash script for automated K-Fold experiments
 └── README.md                 # Project documentation
-🛠️ Usage (使用说明)
-1. Environment Setup
-code
-Bash
+```
+
+---
+
+## 🛠️ Usage (使用说明)
+
+### 1. Environment Setup
+```bash
 # Recommended environment
 conda create -n hmt_env python=3.8
 pip install torch monai pandas scikit-learn lifelines
-2. Data Preparation
-Ensure your data follows the structure defined in dataset.py. The system expects:
-CT Images: Preprocessed NIfTI/NPY files (96x96x96).
-Tabular Data: A CSV file containing Clinical, Blood, Urine, and Microbiome features.
-3. Run the Full Pipeline
-To reproduce the K-Fold cross-validation experiment, simply run the controller script:
-code
-Bash
-# Grants execution permission
-chmod +x run_full_experiment.sh
+```
 
-# Run the full pipeline (Heavy extraction -> Light fusion)
-./run_full_experiment.sh
-Alternatively, you can run individual phases:
-code
-Bash
-# Phase 1: Train/Fine-tune Vision Backbone (Optional)
-python train_heavy.py --mode train
+### 2. Run the Demo
+To verify the baseline architecture without real data, run:
+```bash
+python demo_v1_legacy.py
+```
 
-# Phase 2: Extract Features
-python extract_ct_features.py --output_dir ./data/features
+---
 
-# Phase 3: Train Fusion Model
-python train_light.py --fold 0
-📊 Methodological Details (技术细节)
-The "Heavy-Light" Design
-Training a 3D Swin Transformer end-to-end with 4 other modalities requires massive GPU memory (>48GB).
-Heavy Mode: We freeze tabular inputs and focus on optimizing the 3D CNN/Transformer backbone (Swin UNETR) to extract robust spatial features.
-Light Mode: We freeze the 3D backbone and project the extracted visual features into a shared semantic space with omics data. The computational cost is reduced by ~90%, allowing for rapid hyperparameter tuning and architecture search.
-Missing Modality Handling
-Instead of zero-filling, we introduce learnable "Missing Tokens". If a patient lacks microbiome data, the specific token is replaced by a learnable vector, allowing the network to distinguish between "value 0" and "data missing".
-📝 Future Work (Roadmap)
+## 📝 Future Work (Roadmap)
 
-v1.0: Decoupled training pipeline with standard Transformer Fusion.
+*   [x] **v1.0:** Decoupled training pipeline with standard Transformer Fusion.
+*   [ ] **v2.0:** **"Avatar" Architecture**: Replacing simple concatenation with a **Dual-Stream Cross-Attention Engine** to enable semantic querying between Omics and Imaging. (See `dev-v2-avatar` branch).
 
-v2.0: "Avatar" Architecture: Replacing simple concatenation with a Dual-Stream Cross-Attention Engine to enable semantic querying between Omics and Imaging. (See dev branch).
+---
 
-Verification: Large-scale external validation on multi-center cohorts.
-📧 Contact
-Donghai Lu
-Role: Project Lead & Algorithm Engineer
-Affiliation: Shandong University / Qilu Hospital
-Research Interest: AI for Medical Imaging, Multimodal Fusion, Surgical Data Science
+## 📧 Contact
+
+**Donghai Lu**
+*   **Role:** Project Lead & Algorithm Engineer
+*   **Affiliation:** Shandong University / Qilu Hospital
+*   **Research Interest:** AI for Medical Imaging, Multimodal Fusion, Surgical Data Science
