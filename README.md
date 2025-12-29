@@ -48,15 +48,16 @@ Bash
 git checkout main
 python demo_v1_legacy.py
 🏗 System Architecture (系统架构图)
-v2.0 Cross-Attention Flow
-code
 ### v2.0 Cross-Attention Flow
 ![Avatar Architecture](./assets/architecture_v2.png)
 
 > **Figure 1:** The proposed "Avatar" Dual-Stream Architecture. The **Omics Stream** (Top) queries the **Spatial Stream** (Bottom) via Cross-Attention to extract semantic-aware visual features.
-📂 Repository Structure
-code
-Text
+
+---
+
+## 📂 Repository Structure (目录结构)
+
+```text
 .
 ├── avatar_model.py           # [v2.0] New Cross-Attention Architecture
 ├── demo_avatar_pro.py        # [v2.0] System Simulation Script
