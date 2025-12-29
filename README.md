@@ -1,107 +1,86 @@
-# Hepato-Multimodal-Transformer (HMT)
+# Hepato-Multimodal-Transformer (HMT) System
 
 [![PyTorch](https://img.shields.io/badge/PyTorch-1.10%2B-ee4c2c.svg)](https://pytorch.org/)
-[![MONAI](https://img.shields.io/badge/MONAI-1.0-blueviolet.svg)](https://monai.io/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Status](https://img.shields.io/badge/Status-Research%20Prototype-yellow)](https://github.com/)
+[![Status](https://img.shields.io/badge/Status-Active%20Development-green)](https://github.com/)
+[![Architecture](https://img.shields.io/badge/Architecture-Hybrid%20Transformer-blue)](https://github.com/)
 
 ## 📖 Introduction (项目简介)
 
-**Hepato-Multimodal-Transformer (HMT)** is a deep learning framework designed for the precision prognosis of Hepatocellular Carcinoma (HCC). It addresses the challenge of integrating high-dimensional 3D CT imaging with heterogeneous clinical/omics data under hardware-constrained environments.
+**Hepato-Multimodal-Transformer (HMT)** is an advanced AI framework for the precision prognosis of Hepatocellular Carcinoma (HCC). It bridges the gap between high-dimensional 3D medical imaging and heterogeneous clinical omics data.
 
-This repository implements a **Decoupled "Heavy-Light" Training Strategy**, efficiently fusing **5 modalities** (CT Imaging, Clinical Data, Blood, Urine, Microbiome) to predict immunotherapy efficacy (RECIST), toxicity, and overall survival (Cox).
-
-> **Note:** This is the **v1.0 Baseline Implementation**. For the next-generation architecture featuring Cross-Attention Avatar Engine, please refer to the `dev-v2-avatar` branch.
+This repository hosts the evolution of our research from a robust **Decoupled Baseline (v1.0)** to a next-generation **"Avatar" Cross-Attention Architecture (v2.0)**.
 
 ---
 
-## 🚀 Key Features (核心特性)
+## 🌟 Version Highlights (版本亮点)
 
-*   **⚡ Decoupled Training Strategy (Heavy/Light Mode):**
-    *   Separates high-computational 3D feature extraction (**Swin UNETR**) from multi-modal fusion logic.
-    *   Enables training on large-scale multimodal cohorts using consumer-grade GPUs by freezing the vision backbone in the fusion stage.
-*   **🧩 Transformer-based Fusion:**
-    *   Utilizes a standard Transformer Encoder to capture intra- and inter-modality interactions.
-    *   **Learnable Missing Tokens:** Robustly handles missing clinical data (e.g., missing urine/microbiome reports) without simple imputation.
-*   **🎯 Multi-Task Learning Head:**
-    *   Simultaneously predicts:
-        1.  **Efficacy:** Binary classification (Responder vs. Non-responder).
-        2.  **Toxicity:** Risk grading.
-        3.  **Survival:** Time-to-event prediction using **Cox Proportional Hazards Loss**.
-*   **🛠 Automated Engineering Pipeline:**
-    *   Includes `run_full_experiment.sh` for end-to-end K-Fold cross-validation and result logging.
+### 🧬 v2.0: The "Avatar" Architecture (Current Dev)
+> **Branch:** `dev-v2-avatar` | **Core:** `avatar_model.py`
 
----
+*   **Dual-Stream Engine:** Specialized `Spatial Stream` for CT imaging and `Avatar Stream` for omics data.
+*   **Semantically-Guided Attention:** Uses clinical/omics tokens as "Queries" to retrieve relevant visual features from the 3D CT "Keys/Values".
+*   **Resolution Agnostic:** Handles variable input sizes naturally via attention mechanisms.
+*   **Mock-Pro Demo:** Includes a professional-grade demo script (`demo_avatar_pro.py`) that simulates the full system pipeline without external dependencies.
 
-## 🏗 System Architecture (系统架构)
+### 🏛️ v1.0: Decoupled Baseline
+> **Branch:** `main` | **Core:** `model.py` + `train_heavy.py`
 
-The framework operates in two distinct phases to optimize resource utilization:
-
-```mermaid
-graph LR
-    subgraph P1 ["Phase 1: Heavy Mode (Feature Extraction)"]
-    direction LR
-    A[3D CT Volume] --> B[Swin UNETR Backbone]
-    B --> C[Global Feature Pooling]
-    C --> D((Save .npy Features))
-    end
-
-    subgraph P2 ["Phase 2: Light Mode (Fusion & Training)"]
-    direction LR
-    D --> E[Feature Projector]
-    F[Clinical/Omics Data] --> G[Modality Embeddings]
-    E & G --> H[Transformer Encoder]
-    H --> I[Task-Specific Decoders]
-    I --> J[Outputs: Efficacy / Toxicity / Survival]
-    end
-```
+*   **Heavy/Light Strategy:** A resource-efficient pipeline that separates 3D feature extraction (Swin UNETR) from multimodal fusion.
+*   **Missing Token Learning:** Innovative handling of missing clinical modalities using learnable embeddings.
+*   **Multi-Task Heads:** Simultaneous prediction of Efficacy (RECIST), Toxicity, and Survival (Cox).
 
 ---
 
-## 📂 Directory Structure (目录结构)
+## 🚀 Quick Start (快速开始)
 
-```text
-.
-├── config.py                 # Centralized configuration (Paths, Hyperparams)
-├── dataset.py                # Multi-modal Dataset loader & transforms
-├── model.py                  # Transformer Architecture & Task Heads
-├── modules.py                # Custom Layers & Loss Functions (Cox Loss, etc.)
-├── train_heavy.py            # Phase 1: SwinUNETR training/extraction
-├── train_light.py            # Phase 2: Lightweight Transformer fusion
-├── extract_ct_features.py    # Utility script for offline feature extraction
-├── run_full_experiment.sh    # Bash script for automated K-Fold experiments
-└── README.md                 # Project documentation
-```
+We provide demonstration scripts for both versions to verify the architecture without needing real patient data.
 
----
-
-## 🛠️ Usage (使用说明)
-
-### 1. Environment Setup
+### To Run v2.0 "Avatar" Demo (Recommended)
+Switch to the dev branch and run the professional demo:
 ```bash
-# Recommended environment
-conda create -n hmt_env python=3.8
-pip install torch monai pandas scikit-learn lifelines
+git checkout dev-v2-avatar
+python demo_avatar_pro.py
 ```
+*Expected Output:* System initialization logs, mock data generation, and risk score prediction with attention weights.
 
-### 2. Run the Demo
-To verify the baseline architecture without real data, run:
+### To Run v1.0 Baseline Demo
+Switch to the main branch and run the legacy demo:
 ```bash
+git checkout main
 python demo_v1_legacy.py
 ```
 
 ---
 
-## 📝 Future Work (Roadmap)
+## 🏗 System Architecture (系统架构图)
 
-*   [x] **v1.0:** Decoupled training pipeline with standard Transformer Fusion.
-*   [ ] **v2.0:** **"Avatar" Architecture**: Replacing simple concatenation with a **Dual-Stream Cross-Attention Engine** to enable semantic querying between Omics and Imaging. (See `dev-v2-avatar` branch).
+### v2.0 Cross-Attention Flow
+![Avatar Architecture](./assets/architecture_v2.png)
+
+> **Figure 1:** The proposed "Avatar" Dual-Stream Architecture. The **Omics Stream** (Top) queries the **Spatial Stream** (Bottom) via Cross-Attention to extract semantic-aware visual features.
+
+---
+
+## 📂 Repository Structure (目录结构)
+
+```text
+.
+├── assets/
+│   └── architecture_v2.png   # [v2.0] System Diagram
+├── avatar_model.py           # [v2.0] New Cross-Attention Architecture
+├── demo_avatar_pro.py        # [v2.0] System Simulation Script
+├── demo_v1_legacy.py         # [v1.0] Baseline Verification Script
+├── config.py                 # Configuration Hub
+├── model.py                  # [v1.0] Original Transformer Model
+├── train_heavy/light.py      # Decoupled Training Scripts
+├── run_full_experiment.sh    # Automation Bash Script
+└── README.md                 # Documentation
+```
 
 ---
 
 ## 📧 Contact
-
 **Donghai Lu**
-*   **Role:** Project Lead & Algorithm Engineer
+*   **Project Lead & Algorithm Engineer**
 *   **Affiliation:** Shandong University / Qilu Hospital
-*   **Research Interest:** AI for Medical Imaging, Multimodal Fusion, Surgical Data Science
+*   **Focus:** AI for Medical Imaging, Multimodal Fusion
