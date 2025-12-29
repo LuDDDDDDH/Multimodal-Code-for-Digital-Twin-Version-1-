@@ -1,5 +1,4 @@
 # extract_ct_features.py
-# Parameterize extract_ct_features.py
 
 import os
 import torch

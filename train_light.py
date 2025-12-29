@@ -1,6 +1,5 @@
 # train_light.py
-# You have a train_heavy.py that can train one full K-Fold set of heavy models for a given seed.
-# You have a train_light.py that can train one full K-Fold set of light models for a given seed, using the correct fold-specific CT features.
+
 import os
 import json
 import pandas as pd

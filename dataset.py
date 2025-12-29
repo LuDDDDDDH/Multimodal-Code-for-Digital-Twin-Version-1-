@@ -139,7 +139,6 @@ class MultiModalDataset(Dataset):
 
         for modality in self.modality_names:
             if modality == "ct":
-                # ... (这部分加载CT数据的逻辑保持完全不变) ...
                 potential_filenames = [
                     f"{sample_id}.npy",
                     f"{sample_id}_ct.npy"

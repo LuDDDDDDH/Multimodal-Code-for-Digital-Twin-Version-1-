@@ -7,7 +7,6 @@ import json
 # 0. 工作流控制中心
 # ==============================================================================
 WORKFLOW = 'MULTI_MODAL_TRAINING' 
-# WORKFLOW = 'STABLE_FEATURE_SELECTION'这是我们之前用来shap选择特征的工作流，现在不用了
 # ==============================================================================
 # 1. 实验控制中心
 # ==============================================================================
@@ -21,7 +20,7 @@ USE_PRESELECTED_FEATURES = False # 设置为 False 来使用全部特征
 ACTIVE_MODALITIES = ["ct_vector", "urine", "blood", "microbiome", "kegg", "clinical"]
 # ACTIVE_MODALITIES = ["urine", "blood",  "kegg"] #生物学机制
 # b) 选择融合策略 (用于对比融合方法)
-#    - 'transformer_missing_token': 我们先进的Transformer + Missing Token策略
+#    - 'transformer_missing_token': Transformer + Missing Token策略
 #    - 'concatenate': 简单的特征拼接 + MLP融合
 #    - 'transformer_attention_mask': Transformer + 注意力掩码策略 (待实现)
 FUSION_STRATEGY = 'transformer_missing_token'
@@ -70,7 +69,7 @@ if not os.path.exists(OUTPUT_DIR):
 _ALL_MODALITY_NAMES = ["ct", "ct_vector", "urine", "blood", "microbiome", "kegg", "clinical"]
 # _ALL_MODALITY_NAMES = ["ct", "urine", "blood", "microbiome", "kegg", "clinical"]
 _ALL_ORIGINAL_DIMS = {
-    "urine": 1728, "blood": 1512, "microbiome": 1729,"ct_vector": 256, # ★ 新增
+    "urine": 1728, "blood": 1512, "microbiome": 1729,"ct_vector": 256, 
     "kegg": 419, "clinical": 35 
 }
 
@@ -78,7 +77,7 @@ _ALL_ORIGINAL_DIMS = {
 MANIFEST_PATH = os.path.join(DATA_DIR, 'manifest_mock_labels.csv')
 # MANIFEST_PATH = os.path.join(DATA_DIR, 'manifest.csv')
 DATA_PATHS = {
-    "ct_vector": os.path.join(DATA_DIR, "precomputed_ct_features.csv"), # ★ 新增
+    "ct_vector": os.path.join(DATA_DIR, "precomputed_ct_features.csv"), 
     "urine": os.path.join(DATA_DIR, "urine_all_samples.csv"),
     "blood": os.path.join(DATA_DIR, "blood_all_samples.csv"),
     "microbiome": os.path.join(DATA_DIR, "microbiome_all_samples.csv"),
@@ -95,8 +94,8 @@ DROPOUT_RATE = 0.45
 # ==================== ★ 新增代码开始 (样本不平衡处理) ★ ====================
 # 未来请根据真实数据分析结果修改以下权重值。
 # 计算公式: pos_weight = 多数类样本数 / 少数类样本数
-# 如果您的数据是平衡的，将这些值设为 1.0 即可。
-# 注意：这里的权重是针对正类（label=1）的。如果您的少数类是负类（label=0），
+# 如果数据是平衡的，将这些值设为 1.0 即可。
+# 注意：这里的权重是针对正类（label=1）的。如果少数类是负类（label=0），
 # 需要调整BCEWithLogitsLoss的用法，但pos_weight策略通常假设正类是少数类。
 
 # 示例值 (请替换)
