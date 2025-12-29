@@ -125,7 +125,7 @@ echo "============================================================"
 !/bin/bash
 
 # SEEDS=(42 123 2025)
-SEEDS=(42)  # ★ 临时只跑两个
+SEEDS=(42)  
 K_FOLDS=3
 BASE_OUTPUT_DIR="outputs/full_experiment"
 set -e
